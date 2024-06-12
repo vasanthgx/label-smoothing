@@ -30,6 +30,48 @@
 
 ![alt text](https://github.com/vasanthgx/label-smoothing/blob/main/images/math1.png)
 
+#### Mathematical Description of Label Smoothing:
+Suppose we have a neural network that predicts probabilities for \( K \) classes. Let's denote:
+- \( p_k \): Probability assigned to the \( k \)-th class by the model.
+- \( w_k \): Weights and biases of the last layer.
+- \( x \): Activations of the penultimate layer concatenated with a bias term.
+
+For a neural network trained with hard targets, the standard cross-entropy loss is minimized. For label smoothing, we modify the targets before calculating the loss.
+
+Let's see how label smoothing modifies the targets:
+
+For a network trained with **hard targets**:
+- True targets (\( y \)) are typically one-hot encoded vectors. For example:
+  - If the true label for a sample is class 3 out of 5 classes: \( y = [0, 0, 1, 0, 0] \).
+
+For a network trained with **label smoothing**:
+- Modified targets (\( y_{LS} \)) are a mixture of hard targets and a uniform distribution.
+- \( y_{LS_k} = y_k(1 - \epsilon) + \epsilon / K \), where \( \epsilon \) is the smoothing parameter and \( K \) is the number of classes.
+
+#### Mathematical Notations:
+- **Cross-Entropy Loss \( H(y; p) \)**: It measures the dissimilarity between the true distribution (\( y \)) and the predicted distribution (\( p \)).
+  - For hard targets (\( y \)): \( H(y; p) = -\sum_{k=1}^{K} y_k \log(p_k) \)
+  - For label smoothing (\( y_{LS} \)): \( H(y_{LS}; p) = -\sum_{k=1}^{K} y_{LS_k} \log(p_k) \)
+
+### Examples:
+Let's consider a simple example with 3 classes to illustrate:
+
+#### Hard Targets:
+If the true label is class 2:
+- Hard targets: \( y = [0, 1, 0] \)
+
+#### Label Smoothing:
+Suppose we use a label smoothing parameter \( \epsilon = 0.1 \):
+- Modified targets:
+  - For class 2 (true class): \( y_{LS} = [0.1, 0.9, 0.1] \) 
+  - Other classes: \( y_{LS} = [0.05, 0.05, 0.9] \) (uniform distribution)
+
+### Activations of Penultimate Layer:
+- \( x \) represents the activations of the penultimate layer of the neural network.
+- These activations are fed into the final layer to make predictions.
+- Example: If \( x = [0.5, 0.8, 0.3] \) (activations for three neurons in the penultimate layer).
+
+
 ## Previous work
 
 Fine-grained recognition is a topic of large practical importance and many recent works have addressed such tasks including recognition of flowers , birds , cats and dogs, tree-leaves.
