@@ -44,14 +44,7 @@ For a network trained with **hard targets**:
 - True targets (\( y \)) are typically one-hot encoded vectors. For example:
   - If the true label for a sample is class 3 out of 5 classes: \( y = [0, 0, 1, 0, 0] \).
 
-For a network trained with **label smoothing**:
-- Modified targets (\( y_{LS} \)) are a mixture of hard targets and a uniform distribution.
-- \( y_{LS_k} = y_k(1 - \epsilon) + \epsilon / K \), where \( \epsilon \) is the smoothing parameter and \( K \) is the number of classes.
-
-#### Mathematical Notations:
-- **Cross-Entropy Loss \( H(y; p) \)**: It measures the dissimilarity between the true distribution (\( y \)) and the predicted distribution (\( p \)).
-  - For hard targets (\( y \)): \( H(y; p) = -\sum_{k=1}^{K} y_k \log(p_k) \)
-  - For label smoothing (\( y_{LS} \)): \( H(y_{LS}; p) = -\sum_{k=1}^{K} y_{LS_k} \log(p_k) \)
+![alt text](https://github.com/vasanthgx/label-smoothing/blob/main/images/math3.png)
 
 ### Examples:
 Let's consider a simple example with 3 classes to illustrate:
