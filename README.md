@@ -71,7 +71,7 @@ Suppose we use a label smoothing parameter \( \epsilon = 0.1 \):
 - These activations are fed into the final layer to make predictions.
 - Example: If \( x = [0.5, 0.8, 0.3] \) (activations for three neurons in the penultimate layer).
 
-
+![alt text](https://github.com/vasanthgx/label-smoothing/blob/main/images/math2.png)
 ## Previous work
 
 Fine-grained recognition is a topic of large practical importance and many recent works have addressed such tasks including recognition of flowers , birds , cats and dogs, tree-leaves.
