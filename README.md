@@ -54,7 +54,7 @@ If the true label is class 2:
 - Hard targets: \( y = [0, 1, 0] \)
 
 #### Label Smoothing:
-Suppose we use a label smoothing parameter \( \epsilon = 0.1 \):
+Suppose we use a label smoothing parameter \( ϵ = 0.1 \):
 - Modified targets:
   - For class 2 (true class): \( y_{LS} = [0.1, 0.9, 0.1] \) 
   - Other classes: \( y_{LS} = [0.05, 0.05, 0.9] \) (uniform distribution)
