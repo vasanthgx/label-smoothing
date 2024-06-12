@@ -72,32 +72,91 @@ Suppose we use a label smoothing parameter \( \epsilon = 0.1 \):
 - Example: If \( x = [0.5, 0.8, 0.3] \) (activations for three neurons in the penultimate layer).
 
 ![alt text](https://github.com/vasanthgx/label-smoothing/blob/main/images/math2.png)
-## Previous work
 
-Fine-grained recognition is a topic of large practical importance and many recent works have addressed such tasks including recognition of flowers , birds , cats and dogs, tree-leaves.
-Segmentation has played an important role in object recognition with many algorithms available
-In another body of works, called co-segmentation, better models are trained by exploiting shared appearance features in images containing the same class of objects.
-These approaches are either too slow or are targeted for segmentation during training.
-Segmentation has been popular as an initial step for object detection  or scene interpretation.
-Those methods typically work with small coherent regions on the image and feed the low-level segmentations to object detection pipelines.
-Other related work, not doing segmentation per se, has proposed to first localize the potential object region and utilize this information during recognition.
+## Penultimate Layer Representations
 
-## Object detection and segmentation
+### Visualization Scheme
 
-This section describes how to detect and segment the object, or objects, in an image
-A set of rudimentary region-based detection of parts of the object are done.
-Using those regions as initialization, the Laplacian propagation method, presented, is applied.
-The segmented image and input image are processed through the feature extraction and classification pipeline and the final classification is obtained
+1. **Steps**:
+   - Pick three classes.
+   - Find an orthonormal basis of the plane crossing the templates of these three classes.
+   - Project the activations of examples from these classes onto this plane.
 
-### Understanding the Laplacian Propagation in Semi-Supervised Learning
+2. **Results**:
+   - This 2-D visualization shows how activations cluster around the templates and how label smoothing affects the distances between these clusters.
 
-![alt text](https://github.com/vasanthgx/review1/blob/main/images/lp1.png)
+### Visualization Examples
 
-![alt text](https://github.com/vasanthgx/review1/blob/main/images/lp2.png)
+1. **CIFAR-10 with AlexNet**:
+   - Classes: "airplane", "automobile", "bird".
+   - Without label smoothing: Clusters are broader and more spread out.
+   - With label smoothing (factor of 0.1): Clusters are tighter and form regular triangles, indicating that examples are equidistant from all class templates.
 
-![alt text](https://github.com/vasanthgx/review1/blob/main/images/lp3.png)
+2. **CIFAR-100 with ResNet-56**:
+   - Classes: "beaver", "dolphin", "otter".
+   - Similar behavior observed, with label smoothing leading to tighter clusters and better accuracy.
+   - Without label smoothing: Higher absolute values in projections, indicating over-confident predictions.
 
-![alt text](https://github.com/vasanthgx/review1/blob/main/images/lp4.png)
+3. **ImageNet with Inception-v4**:
+   - Classes: "tench", "meerkat", "cleaver" (semantically different) and "toy poodle", "miniature poodle", "tench" (semantically similar).
+   - With semantically similar classes:
+     - Without label smoothing: Similar classes cluster close with isotropic spread.
+     - With label smoothing: Similar classes form an arc, maintaining equidistant from all class templates.
+   - Indicates that label smoothing helps in regularizing the distances even for fine-grained, semantically similar classes.
+   
+![alt text](https://github.com/vasanthgx/label-smoothing/blob/main/images/visual1.png)
+
+![alt text](https://github.com/vasanthgx/label-smoothing/blob/main/images/table2.png)
+   
+### Key Observations
+
+- **Effect of Label Smoothing**:
+  - It makes the activations of examples more structured by maintaining regular distances between different class templates.
+  - It reduces over-confidence in predictions, as shown by the constrained difference in logits.
+- **Independence from Architecture and Dataset**:
+  - The impact of label smoothing is consistent across different architectures and datasets.
+- **Erasure of Information**:
+  - Label smoothing can erase fine-grained information, making classes more uniformly distant from each other, which might sometimes reduce the richness of the representation.
+
+
+
+
+
+## Implicit model calibration
+
+### Calibration in Neural Networks
+- **Calibration** refers to how well the predicted probabilities of a model reflect the actual probabilities of the outcomes. A well-calibrated model's confidence scores match the actual accuracy.
+- **Expected Calibration Error (ECE)** is a metric used to measure calibration. A lower ECE indicates better calibration.
+
+### Modern Neural Networks and Calibration
+- Guo et al. [15] demonstrated that modern neural networks often exhibit poor calibration despite high performance, tending to be overconfident.
+- **Temperature Scaling** is a post-processing technique that improves calibration by scaling the logits (inputs to the softmax function) with a temperature parameter.
+
+### Label Smoothing
+- **Label Smoothing** is a technique that adjusts the hard labels by distributing some probability mass to all classes, thus preventing the network from becoming overconfident.
+- The authors propose that label smoothing not only prevents overconfidence but also improves calibration, similar to temperature scaling.
+
+### Image Classification Experiments
+- The experiments involve training a ResNet-56 on CIFAR-100 and an unspecified network on ImageNet.
+- **Reliability Diagrams** are used to visualize calibration. Perfect calibration is represented by a diagonal line where confidence equals accuracy.
+- **Results**:
+  - Without temperature scaling, models trained with hard targets are overconfident.
+  - Temperature scaling improves calibration significantly.
+  - Label smoothing also improves calibration, producing results comparable to temperature scaling.
+
+### Machine Translation Experiments
+- The experiments are conducted using the Transformer architecture on the English-to-German translation task.
+- **BLEU Score** is the metric used to evaluate translation quality, while **Negative Log-Likelihood (NLL)** measures the likelihood of the correct sequence under the model.
+- **Results**:
+  - Label smoothing improves both BLEU score and calibration compared to hard targets.
+  - Temperature scaling can improve calibration and BLEU score for hard targets but cannot match the BLEU score improvements achieved with label smoothing.
+  - Label smoothing results in worse NLL, indicating a trade-off between calibration and likelihood.
+
+### Key Findings
+- Label smoothing effectively calibrates neural networks for both image classification and machine translation tasks.
+- In image classification, label smoothing produces calibration similar to temperature scaling.
+- In machine translation, label smoothing improves BLEU scores more than temperature scaling, even though it results in worse NLL.
+- The relationship between calibration (ECE) and performance metrics (BLEU score) is complex, with label smoothing providing benefits that temperature scaling cannot fully replicate.
 
 
 
