@@ -165,7 +165,7 @@ Suppose we use a label smoothing parameter \( \epsilon = 0.1 \):
 
 ### Mechanism of Distillation
 - In distillation, the cross-entropy loss used for training is modified to include both the true labels and the soft outputs of the teacher.
-- A parameter \(\lambda\) controls the balance between fitting the hard targets and approximating the softened teacher outputs.
+- A parameter (epsilon) controls the balance between fitting the hard targets and approximating the softened teacher outputs.
 - Temperature scaling is used to control the smoothness of the teacher's output, exaggerating differences between probabilities of incorrect answers.
 
 ### Experimental Setup and Findings
